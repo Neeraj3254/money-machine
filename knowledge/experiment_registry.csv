@@ -1,0 +1,13 @@
+Experiment,Version,Universe,Holding_Period,Execution,Result,Status
+Frozen Momentum,V1,5 NSE stocks,20D,Close-to-close,Mixed/unstable,REJECT
+Single Stock Backtest,V1,RELIANCE,20D,Signal shift,Underperformed buy-and-hold,REJECT
+Out of Sample,V1,RELIANCE,20D,Signal shift,Positive OOS but limited,INCONCLUSIVE
+Parameter Robustness,V1,RELIANCE,20D,Signal shift,High parameter dispersion,WARNING
+Regime Analysis,V1,RELIANCE,20D,Signal shift,Strong regime variation,WARNING
+Cross Stock Validation,V1,5 NSE stocks,20D,Close-to-close,5/5 below baseline,REJECT
+Bootstrap Test,V1,5 NSE stocks,20D,Close-to-close,Mostly CI includes zero,INCONCLUSIVE
+Non Overlapping Test,V1,5 NSE stocks,20D,Close-to-close,Mixed results,INCONCLUSIVE
+Pooled Expectancy,V1,5 NSE stocks,20D,Close-to-close,+1.05% expectancy,INCONCLUSIVE
+Cost Sensitivity,V1,5 NSE stocks,20D,Close-to-close,Advantage erodes with costs,WARNING
+Next Open Execution,V1,5 NSE stocks,20D,Next open,Mixed results,INCONCLUSIVE
+Walk Forward,V1,5 NSE stocks,20D,Close-to-close,Strong time variation,WARNING

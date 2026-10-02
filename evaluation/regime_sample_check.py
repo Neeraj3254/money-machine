@@ -2,51 +2,103 @@ import pandas as pd
 from pathlib import Path
 
 
-INPUT_PATH = (
-    Path("data/processed")
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+
+INPUT_FILE = (
+    BASE_DIR
+    / "data"
+    / "processed"
     / "strategy_market_regime.csv"
 )
 
 
-df = pd.read_csv(INPUT_PATH)
+# ============================================================
+# LOAD DATA
+# ============================================================
+
+df = pd.read_csv(INPUT_FILE)
 
 
-print("=" * 80)
-print("REGIME SAMPLE SIZE CHECK")
-print("=" * 80)
+# ============================================================
+# CHECK REQUIRED COLUMNS
+# ============================================================
 
+required_columns = [
+    "Stock",
+    "Market_Regime",
+    "Observations",
+    "Average_Return",
+    "Median_Return",
+    "Positive_Rate",
+]
 
-summary = (
-    df.groupby("Market_Regime")
-    .agg(
-        Stocks=("Stock", "nunique"),
-        Total_Observations=("Observations", "sum"),
-        Minimum_Observations=("Observations", "min"),
-        Maximum_Observations=("Observations", "max")
+missing_columns = [
+    column
+    for column in required_columns
+    if column not in df.columns
+]
+
+if missing_columns:
+    raise ValueError(
+        f"Missing required columns: {missing_columns}"
     )
-    .reset_index()
+
+
+# ============================================================
+# CLASSIFY EVIDENCE
+# ============================================================
+
+def classify_sample_size(n):
+    if n < 10:
+        return "VERY LOW"
+    elif n < 30:
+        return "LOW"
+    elif n < 50:
+        return "PRELIMINARY"
+    else:
+        return "REASONABLE"
+
+
+df["Evidence_Level"] = (
+    df["Observations"]
+    .apply(classify_sample_size)
 )
 
 
-summary["Warning"] = summary[
-    "Total_Observations"
-].apply(
-    lambda x:
-        "LOW SAMPLE"
-        if x < 30
-        else "OK"
-)
+# ============================================================
+# DISPLAY RESULTS
+# ============================================================
 
+print("=" * 75)
+print("REGIME SAMPLE SIZE CHECK")
+print("=" * 75)
+
+print()
 
 print(
-    summary.to_string(index=False)
+    df[
+        [
+            "Stock",
+            "Market_Regime",
+            "Observations",
+            "Evidence_Level",
+        ]
+    ].to_string(index=False)
 )
 
+print()
 
-print("\nInterpretation rule:")
-print("30+ observations = preliminary")
-print("Below 30 = insufficient for strong inference")
+print("=" * 75)
+print("EVIDENCE RULE")
+print("=" * 75)
 
-print("\n" + "=" * 80)
-print("REGIME SAMPLE CHECK COMPLETE")
-print("=" * 80)
+print("<10   = VERY LOW")
+print("10-29 = LOW")
+print("30-49 = PRELIMINARY")
+print("50+   = REASONABLE")
+
+print("=" * 75)

@@ -1,0 +1,129 @@
+from pathlib import Path
+
+import pandas as pd
+
+from .features import build_trend_strength
+from .outcomes import add_forward_return
+from .runner import run_dataframe_experiment
+from .validation import validate_experiment
+from .stability import (
+    evaluate_time_stability,
+    summarize_time_stability,
+)
+from .oos import (
+    split_train_test,
+    evaluate_oos,
+)
+
+
+TICKERS = [
+    "RELIANCE",
+    "TCS",
+    "INFY",
+    "HDFCBANK",
+    "ICICIBANK",
+]
+
+
+def load_stock(ticker: str) -> pd.DataFrame:
+    path = Path("data/processed") / f"{ticker.lower()}_features.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Processed data not found for {ticker}: {path}"
+        )
+
+    return pd.read_csv(path)
+
+
+def analyze_stock(
+    ticker: str,
+    cost_per_trade: float = 0.001,
+) -> dict:
+
+    df = load_stock(ticker)
+
+    df = build_trend_strength(df)
+
+    df = add_forward_return(
+        df,
+        horizon_days=20,
+    )
+
+    result = run_dataframe_experiment(
+        experiment_id="V2-002",
+        df=df,
+        signal_column="V2_002_Signal",
+        forward_return_column="Forward_Return_20D",
+        cost_per_trade=cost_per_trade,
+    )
+
+    result = validate_experiment(result)
+
+    stability_results = evaluate_time_stability(
+        df=df,
+        signal_column="V2_002_Signal",
+        forward_return_column="Forward_Return_20D",
+        periods=3,
+    )
+
+    stability_summary = summarize_time_stability(
+        stability_results
+    )
+
+    _, test_df = split_train_test(
+        df,
+        train_ratio=0.70,
+    )
+
+    oos_result = evaluate_oos(
+        test_df=test_df,
+        signal_column="V2_002_Signal",
+        forward_return_column="Forward_Return_20D",
+    )
+
+    return {
+        "ticker": ticker,
+        "experiment_id": result.experiment_id,
+        "hypothesis": result.hypothesis,
+        "sample_size": result.sample_size,
+        "baseline_return": result.baseline_return,
+        "signal_return": result.signal_return,
+        "incremental_return": result.incremental_return,
+        "signal_positive_rate": result.signal_positive_rate,
+        "cost_adjusted_return": result.cost_adjusted_return,
+        "temporal_stability": stability_summary,
+        "oos": oos_result,
+        "validation_status": result.status,
+        "failure_reason": result.failure_reason,
+    }
+
+
+def scan_universe(
+    tickers: list[str] | None = None,
+    cost_per_trade: float = 0.001,
+) -> list[dict]:
+
+    universe = tickers or TICKERS
+
+    results = []
+
+    for ticker in universe:
+        try:
+            result = analyze_stock(
+                ticker=ticker,
+                cost_per_trade=cost_per_trade,
+            )
+
+            results.append(result)
+
+        except Exception as exc:
+            results.append(
+                {
+                    "ticker": ticker,
+                    "status": "ERROR",
+                    "error": str(exc),
+                }
+            )
+
+    return results

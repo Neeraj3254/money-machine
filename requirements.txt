@@ -1,2 +1,8 @@
 fastapi
 uvicorn
+pandas
+numpy
+yfinance
+requests
+pyarrow
+pytest

@@ -16,6 +16,26 @@ import yfinance as yf
 from .premove import add_premove_features, add_premove_scores
 
 
+def _relative_strength_diagnostics(result: pd.DataFrame) -> dict:
+    """Summarize relative-strength evidence for returned candidates."""
+    column = "Relative_Strength_NIFTY_20D"
+
+    if column not in result.columns:
+        return {
+            "relative_strength_evidence": "unavailable",
+            "missing_relative_strength_count": None,
+        }
+
+    values = pd.to_numeric(result[column], errors="coerce")
+    missing_count = int(values.isna().sum())
+
+    return {
+        "relative_strength_evidence": (
+            "available" if missing_count == 0 else "missing_values"
+        ),
+        "missing_relative_strength_count": missing_count,
+    }
+
 # Static NIFTY-50-style research universe.
 # This is not a claim of historical or current index membership.
 NIFTY50 = [
@@ -123,7 +143,7 @@ def _one_symbol(raw: pd.DataFrame, symbol: str) -> pd.DataFrame:
         & (df["HGHPRIC"] > 0)
         & (df["LWPRIC"] > 0)
         & (df["CLSPRIC"] > 0)
-        & (df["TTLTRADGVOL"] >= 0)
+        & (df["TTLTRADGVOL"] > 0)
         & (df["HGHPRIC"] >= df["LWPRIC"])
         & (df["HGHPRIC"] >= df["OPNPRIC"])
         & (df["HGHPRIC"] >= df["CLSPRIC"])
@@ -356,9 +376,13 @@ def build_live_premove_snapshot(
 
     # Attach download diagnostics for callers that choose to inspect them.
     # This is DataFrame metadata, not a candidate ranking feature.
+
     result.attrs["requested_symbols"] = len(symbols)
     result.attrs["symbols_with_data"] = len(frames)
     result.attrs["symbols_without_valid_data"] = failed_symbols
+
+    result.attrs.update(_relative_strength_diagnostics(result))
+
     result.attrs["benchmark"] = "^NSEI"
     result.attrs["data_source"] = "Yahoo Finance EOD via yfinance"
 

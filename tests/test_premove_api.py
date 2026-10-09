@@ -41,3 +41,11 @@ def test_premove_scan_serializes_non_finite_values(monkeypatch):
     assert body["data_quality"]["duplicate_symbol_rows"] == 1
     assert body["data_quality"]["non_finite_numeric_cells"] >= 1
     assert body["scan_diagnostics"]["benchmark"] == "MOCK_INDEX"
+    assert (
+        body["scan_diagnostics"]["relative_strength_evidence"]
+        == "unavailable"
+    )
+    assert (
+        body["scan_diagnostics"]["missing_relative_strength_count"]
+        is None
+    )

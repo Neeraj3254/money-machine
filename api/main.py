@@ -168,6 +168,7 @@ def premove_scan(top_n: int = 25):
                 "completeness or predictive validity."
             ),
         },
+
         "scan_diagnostics": {
             "requested_symbols": snapshot.attrs.get("requested_symbols"),
             "symbols_with_data": snapshot.attrs.get("symbols_with_data"),
@@ -176,7 +177,14 @@ def premove_scan(top_n: int = 25):
             ),
             "benchmark": snapshot.attrs.get("benchmark"),
             "data_source": snapshot.attrs.get("data_source"),
+            "relative_strength_evidence": snapshot.attrs.get(
+                "relative_strength_evidence", "unavailable"
+            ),
+            "missing_relative_strength_count": snapshot.attrs.get(
+                "missing_relative_strength_count"
+            ),
         },
+
     }
     return JSONResponse(content=response, status_code=200)
 @app.post("/analyze")

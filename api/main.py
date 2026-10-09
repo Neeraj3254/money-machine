@@ -62,7 +62,15 @@ def premove_scan(top_n: int = 25):
     if top_n < 1 or top_n > 100:
         raise ValueError("top_n must be between 1 and 100")
 
-    snapshot = build_live_premove_snapshot(top_n=top_n)
+    scan_diagnostics = {
+    "requested_symbols": snapshot.attrs.get("requested_symbols"),
+    "symbols_with_data": snapshot.attrs.get("symbols_with_data"),
+    "symbols_without_valid_data": snapshot.attrs.get(
+        "symbols_without_valid_data", []
+    ),
+    "benchmark": snapshot.attrs.get("benchmark"),
+    "data_source": snapshot.attrs.get("data_source"),
+}
 
     columns = [
         "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
@@ -153,4 +161,5 @@ def premove_scan(top_n: int = 25):
         "data_note": "Intraday VWAP and news/catalyst evidence are not fabricated; no automatic execution.",
         "candidates": candidate_records,
         "data_quality": data_quality,
+        "scan_diagnostics": scan_diagnostics,
     }

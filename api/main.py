@@ -88,7 +88,47 @@ def premove_scan(top_n: int = 25):
     ]
 
     clean = snapshot[available].copy()
-    clean = clean.astype(object).where(pd.notna(clean), None)
+    
+    # Data-quality audit for the returned candidates.
+    candidate_records = clean.to_dict(orient="records")
+    unique_symbols = {
+        str(row["SYMBOL"])
+        for row in candidate_records
+        if row.get("SYMBOL") is not None
+    }
+
+    numeric_columns = [
+        column for column in clean.columns
+        if column not in {"SYMBOL", "ISIN", "TRADE_DATE", "Detector_Status",
+                          "Breakout_5D", "Breakout_10D", "Breakout_20D",
+                          "Breakout_50D", "Breakout_52W", "VWAP_Relation",
+                          "EMA_Stack_Bullish", "CATALYST_STATUS"}
+    ]
+
+    missing_numeric_cells = 0
+    non_finite_cells = 0
+
+    for column in numeric_columns:
+        values = pd.to_numeric(clean[column], errors="coerce")
+        missing_numeric_cells += int(values.isna().sum())
+        non_finite_cells += int(
+            (~values.dropna().map(lambda value: __import__("math").isfinite(float(value)))).sum()
+        )
+
+    data_quality = {
+        "requested_top_n": top_n,
+        "returned_candidates": len(candidate_records),
+        "unique_symbols": len(unique_symbols),
+        "duplicate_symbol_rows": len(candidate_records) - len(unique_symbols),
+        "missing_numeric_cells": missing_numeric_cells,
+        "non_finite_numeric_cells": non_finite_cells,
+        "response_audit_scope": "returned_candidates_only",
+        "warning": (
+            "This audit does not establish full-universe download completeness "
+            "or predictive validity."
+        ),
+    }
+
 
     return {
         "system": "Money Machine",

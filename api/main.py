@@ -111,26 +111,27 @@ def premove_scan(top_n: int = 25):
         "data_source": snapshot.attrs.get("data_source"),
     }
 
-columns = [
-    "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
-    "Setup_Score", "Chase_Risk", "Adjusted_Setup_Score",
-    "PreMove_Status", "PreMove_Rank",
-    "RVOL_5D", "RVOL_10D", "RVOL_20D", "RVOL_50D",
-    "Volume_Acceleration_1D",
-    "Return_1D",
-    "Gap_Pct",
-    "ATR_Range_Ratio",
-    "Near_20D_High",
-    "Pullback_Depth_20D",
-    "Distance_From_20D_High",
-    "Liquidity_Turnover",
-    "CATALYST_SCORE", "CATALYST_STATUS",
-]
+    columns = [
+        "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
+        "Setup_Score", "Chase_Risk", "Adjusted_Setup_Score",
+        "PreMove_Status", "PreMove_Rank",
+        "RVOL_5D", "RVOL_10D", "RVOL_20D", "RVOL_50D",
+        "Volume_Acceleration_1D",
+        "Return_1D",
+        "Gap_Pct",
+        "ATR_Range_Ratio",
+        "Near_20D_High",
+        "Pullback_Depth_20D",
+        "Distance_From_20D_High",
+        "Liquidity_Turnover",
+        "CATALYST_SCORE", "CATALYST_STATUS",
+    ]
 
     available = [
         column for column in columns
         if column in snapshot.columns
     ]
+
 
     clean = snapshot[available].copy()
 

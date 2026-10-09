@@ -1,8 +1,12 @@
+
+import math
+
+import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
-import pandas as pd
 
 from research.market.live_premove import build_live_premove_snapshot
+
 
 app = FastAPI(
     title="Money Machine API",
@@ -105,15 +109,26 @@ def premove_scan(top_n: int = 25):
                           "EMA_Stack_Bullish", "CATALYST_STATUS"}
     ]
 
+
     missing_numeric_cells = 0
     non_finite_cells = 0
 
     for column in numeric_columns:
-        values = pd.to_numeric(clean[column], errors="coerce")
-        missing_numeric_cells += int(values.isna().sum())
-        non_finite_cells += int(
-            (~values.dropna().map(lambda value: __import__("math").isfinite(float(value)))).sum()
+        original = clean[column]
+        values = pd.to_numeric(original, errors="coerce")
+
+        # Count actual missing values and values that cannot be parsed.
+        missing_numeric_cells += int(original.isna().sum())
+        missing_numeric_cells += int(
+            (original.notna() & values.isna()).sum()
         )
+
+        # Count positive or negative infinity separately.
+        finite_mask = values.map(
+            lambda value: pd.isna(value) or math.isfinite(float(value))
+        )
+        non_finite_cells += int((~finite_mask).sum())
+
 
     data_quality = {
         "requested_top_n": top_n,
@@ -136,5 +151,6 @@ def premove_scan(top_n: int = 25):
         "status": "RESEARCH_CANDIDATE_ONLY",
         "data_source": "Yahoo Finance EOD via yfinance; research fallback, not official NSE intraday data",
         "data_note": "Intraday VWAP and news/catalyst evidence are not fabricated; no automatic execution.",
-        "candidates": clean.to_dict(orient="records"),
+        "candidates": candidate_records,
+        "data_quality": data_quality,
     }

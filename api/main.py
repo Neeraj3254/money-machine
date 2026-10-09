@@ -111,28 +111,21 @@ def premove_scan(top_n: int = 25):
         "data_source": snapshot.attrs.get("data_source"),
     }
 
-    columns = [
-        "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
-        "Setup_Score", "Chase_Risk", "Adjusted_Setup_Score",
-        "PreMove_Status", "PreMove_Rank",
-        "RVOL_5D", "RVOL_10D", "RVOL_20D", "RVOL_50D",
-        "ATR_Expansion", "Range_Expansion",
-        "Breakout_5D", "Breakout_10D", "Breakout_20D",
-        "Breakout_50D", "Breakout_52W",
-        "VWAP_Relation", "EMA_Stack_Bullish",
-        "RSI_14", "MACD", "MACD_Signal",
-        "Momentum_1D", "Momentum_3D", "Momentum_5D",
-        "Momentum_10D", "Momentum_20D",
-        "Relative_Strength_NIFTY_1D",
-        "Relative_Strength_NIFTY_3D",
-        "Relative_Strength_NIFTY_5D",
-        "Relative_Strength_NIFTY_10D",
-        "Volume_Acceleration_1D",
-        "Gap_Pct", "Pullback_Depth_20D",
-        "Distance_From_20D_High",
-        "Liquidity_Turnover",
-        "CATALYST_SCORE", "CATALYST_STATUS",
-    ]
+columns = [
+    "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
+    "Setup_Score", "Chase_Risk", "Adjusted_Setup_Score",
+    "PreMove_Status", "PreMove_Rank",
+    "RVOL_5D", "RVOL_10D", "RVOL_20D", "RVOL_50D",
+    "Volume_Acceleration_1D",
+    "Return_1D",
+    "Gap_Pct",
+    "ATR_Range_Ratio",
+    "Near_20D_High",
+    "Pullback_Depth_20D",
+    "Distance_From_20D_High",
+    "Liquidity_Turnover",
+    "CATALYST_SCORE", "CATALYST_STATUS",
+]
 
     available = [
         column for column in columns

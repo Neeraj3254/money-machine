@@ -1,4 +1,3 @@
-```python
 import math
 
 import pandas as pd
@@ -244,4 +243,3 @@ def premove_scan(top_n: int = 25):
         content=response,
         status_code=200,
     )
-```

@@ -113,7 +113,8 @@ def premove_scan(top_n: int = 25):
 
     columns = [
         "SYMBOL", "ISIN", "TRADE_DATE", "CLSPRIC",
-        "Setup_Score", "Chase_Risk", "Detector_Status",
+        "Setup_Score", "Chase_Risk", "Adjusted_Setup_Score",
+        "PreMove_Status", "PreMove_Rank",
         "RVOL_5D", "RVOL_10D", "RVOL_20D", "RVOL_50D",
         "ATR_Expansion", "Range_Expansion",
         "Breakout_5D", "Breakout_10D", "Breakout_20D",

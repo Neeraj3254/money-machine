@@ -158,7 +158,7 @@ def premove_scan(top_n: int = 25):
         )
 
     numeric_exclusions = {
-        "SYMBOL", "ISIN", "TRADE_DATE", "Detector_Status",
+        "SYMBOL", "ISIN", "TRADE_DATE", "Detector_Status","PreMove_Status",
         "Breakout_5D", "Breakout_10D", "Breakout_20D",
         "Breakout_50D", "Breakout_52W", "VWAP_Relation",
         "EMA_Stack_Bullish", "CATALYST_STATUS",

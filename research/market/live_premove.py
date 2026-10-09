@@ -306,7 +306,13 @@ def build_live_premove_snapshot(
 
     # Sort and score using the existing scoring implementation.
     # Drop rows without the minimum required price and score fields.
-    required_for_ranking = ["SYMBOL", "CLSPRIC", "Setup_Score"]
+    required_for_ranking = [
+    "SYMBOL",
+    "CLSPRIC",
+    "Setup_Score",
+    "Chase_Risk",
+    "Adjusted_Setup_Score",
+    ]
     missing_columns = [
         column
         for column in required_for_ranking

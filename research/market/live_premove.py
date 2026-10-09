@@ -337,14 +337,16 @@ def build_live_premove_snapshot(
             "No candidates have valid prices and ranking scores."
         )
 
-# Rank by chase-adjusted score, with deterministic tie-breaking.
-scored = scored.sort_values(
-    ["Adjusted_Setup_Score", "Setup_Score", "SYMBOL"],
-    ascending=[False, False, True],
-    kind="stable",
-)
+
+    # Rank by chase-adjusted score, with deterministic tie-breaking.
+    scored = scored.sort_values(
+        ["Adjusted_Setup_Score", "Setup_Score", "SYMBOL"],
+        ascending=[False, False, True],
+        kind="stable",
+    )
 
     result = scored.head(top_n).reset_index(drop=True)
+
 
     # Attach download diagnostics for callers that choose to inspect them.
     # This is DataFrame metadata, not a candidate ranking feature.

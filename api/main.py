@@ -88,7 +88,7 @@ def premove_scan(top_n: int = 25):
     ]
 
     clean = snapshot[available].copy()
-    clean = clean.where(pd.notna(clean), None)
+    clean = clean.astype(object).where(pd.notna(clean), None)
 
     return {
         "system": "Money Machine",

@@ -1,0 +1,19 @@
+{
+  "records": [
+    {
+      "reason": "NSE archive returned HTTP 404",
+      "status": "UNAVAILABLE",
+      "trade_date": "2021-01-04",
+      "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20210104_F_0000.csv.zip"
+    },
+    {
+      "path": "data\\market\\raw\\BhavCopy_NSE_CM_0_0_0_20260102_F_0000.csv.zip",
+      "sha256": "a92ed16c3f93acb86dcf04af43fc627584ac6d9fe93ae4e49891f134fd137490",
+      "size_bytes": 182111,
+      "status": "CACHED",
+      "trade_date": "2026-01-02",
+      "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20260102_F_0000.csv.zip"
+    }
+  ],
+  "source": "NSE CM UDiFF BhavCopy"
+}

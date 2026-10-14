@@ -14,6 +14,7 @@ def run_basic_experiment(
     """
     Run the basic descriptive stage of a V2 experiment.
 
+
     This function calculates evidence.
     It does not decide whether a strategy is tradable.
     """
@@ -69,17 +70,29 @@ def run_dataframe_experiment(
             f"{forward_return_column}"
         )
 
+
     eligible = df[forward_return_column].notna()
+    signal_mask = df[signal_column].eq(True).fillna(False)
 
     signal_returns = df.loc[
-        eligible & df[signal_column],
+        eligible & signal_mask,
         forward_return_column,
-    ]
+    ].astype(float)
 
+    # Independent descriptive control: eligible observations
+    # where the signal is not active.
     baseline_returns = df.loc[
-        eligible,
+        eligible & ~signal_mask,
         forward_return_column,
-    ]
+    ].astype(float)
+
+    if signal_returns.empty:
+        raise ValueError("No valid observations for the signal.")
+
+    if baseline_returns.empty:
+        raise ValueError(
+            "No valid non-signal control observations."
+        )
 
     if signal_returns.empty:
         raise ValueError(

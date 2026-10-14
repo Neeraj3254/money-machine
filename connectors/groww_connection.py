@@ -49,9 +49,13 @@ response = requests.post(
 )
 
 print("HTTP status:", response.status_code)
-print("Groww response:", response.text)
 
-response.raise_for_status()
+if not response.ok:
+    print(
+        "Groww authentication failed. "
+        f"HTTP status: {response.status_code}"
+    )
+    response.raise_for_status()
 
 data = response.json()
 
@@ -62,10 +66,11 @@ access_token = data["token"]
 
 print("Groww authentication successful.")
 print("Access token received:", bool(access_token))
-print("Token length:", len(access_token))
 print("API key loaded:", bool(api_key))
 print("API secret loaded:", bool(api_secret))
-print("API key length:", len(api_key))
-print("API secret length:", len(api_secret))
-print("API key starts with:", api_key[:4])
-print("API key ends with:", api_key[-4:])
+# Read-only account check: available margin
+from growwapi import GrowwAPI
+groww = GrowwAPI(access_token)
+margin_details = groww.get_available_margin_details()
+print("\n--- GROWW AVAILABLE MARGIN ---")
+print("Margin details retrieved successfully.")

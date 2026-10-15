@@ -25,6 +25,25 @@ def _atomic_save_csv(df: pd.DataFrame, output: Path) -> None:
             temporary.unlink()
 
 
+def _validate_security_master_fields(df: pd.DataFrame) -> None:
+    """Reject malformed master records before any universe filtering."""
+    required_columns = ["SYMBOL", "SERIES", "ISIN"]
+    missing = [column for column in required_columns if column not in df]
+    if missing:
+        raise ValueError(
+            f"Security master is missing required columns: {missing}"
+        )
+
+    invalid_values = {"", "NAN", "NONE", "NULL", "<NA>"}
+    for column in required_columns:
+        values = df[column].astype("string").str.strip().str.upper()
+        invalid = values.isna() | values.isin(invalid_values)
+        if invalid.any():
+            raise ValueError(
+                f"Security master contains invalid {column} values"
+            )
+
+
 def download_security_master(
     output_path: str = "data/universe/nse_security_master.csv",
 ) -> Path:
@@ -149,6 +168,11 @@ def build_equity_universe(
 
     if master.empty:
         raise ValueError("Downloaded security master is empty.")
+
+    # Validate the entire provider master before filtering out non-EQ rows.
+    # Otherwise a malformed EQ record can be silently discarded by the
+    # filter and the remaining partial universe can appear valid.
+    _validate_security_master_fields(master)
 
     # Keep standard equity-series securities.
     equity = filter_equity_universe(master)

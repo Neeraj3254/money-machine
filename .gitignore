@@ -1,4 +1,4 @@
-.venv/
+﻿.venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
@@ -6,3 +6,13 @@ __pycache__/
 *.log
 data/raw/
 data/cache/
+.vscode/
+data/processed/*OVERLAPPING_INVALID*
+evaluation/*OVERLAPPING_INVALID*
+evaluation/*_OLD.py
+
+# Downloaded market data: keep large datasets out of Git
+data/market/raw/
+data/market/normalized/
+# Local backup files
+*.bak

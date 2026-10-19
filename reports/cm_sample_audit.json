@@ -1,0 +1,58 @@
+{
+  "archive": "Download Sample Files for CM (.zip)_0.zip",
+  "archive_sha256": "306e5602a02795c3e8b00502f1c966a155aed962985e61360668de5cca6f43c1",
+  "audit_version": 1,
+  "profitability_or_predictive_edge_assessed": false,
+  "snapshot_member": "CM_SNAPSHOT_ddmmyyyy/CM_SNAPSHOT_ddmmyyyy.gz",
+  "snapshots": {
+    "coverage_status": "observed range only; full-session coverage unverified",
+    "distinct_symbol_count": 54,
+    "duplicate_identifier_count": 260982,
+    "expected_field_count": 14,
+    "field_count_distribution": {
+      "14": 500000
+    },
+    "identifier_strictly_increasing": false,
+    "invalid_or_nonpositive_price_quantity_rows": 0,
+    "malformed_row_count": 0,
+    "record_type": "snapshots",
+    "row_count": 500000,
+    "rows_with_valid_positive_price_and_quantity": 500000,
+    "time_range_observed": {
+      "first": "09:00:00",
+      "invalid_clock_rows": 0,
+      "last": "13:09:44",
+      "valid_clock_rows": 500000
+    }
+  },
+  "source_archive_modified": false,
+  "trade_member": "CM_TRADES_ddmmyyyy/CM_TRADES_ddmmyyyy.gz",
+  "trades": {
+    "coverage_status": "observed range only; full-session coverage unverified",
+    "distinct_symbol_count": 428,
+    "duplicate_identifier_count": 0,
+    "expected_field_count": 7,
+    "field_count_distribution": {
+      "7": 500000
+    },
+    "identifier_strictly_increasing": true,
+    "invalid_or_nonpositive_price_quantity_rows": 0,
+    "malformed_row_count": 0,
+    "record_type": "trades",
+    "row_count": 500000,
+    "rows_with_valid_positive_price_and_quantity": 500000,
+    "time_range_observed": {
+      "first": "09:07:18",
+      "invalid_clock_rows": 0,
+      "last": "09:27:31",
+      "valid_clock_rows": 500000
+    }
+  },
+  "unresolved_questions": [
+    "Trade rows have seven fields; the reviewed historical specification describes six.",
+    "The meaning of the leading trade field is not inferred.",
+    "Observed clock ranges do not establish full-session coverage.",
+    "Source-availability and local-receipt timestamps are not assessed.",
+    "Snapshot rows are order-book records, not executed trade volume."
+  ]
+}

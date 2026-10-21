@@ -1,6 +1,10 @@
-fastapi
+﻿fastapi
 uvicorn
 pydantic
 pandas
 numpy
 yfinance
+requests
+pyarrow
+websockets==17.2
+protobuf==7.36.2

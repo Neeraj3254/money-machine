@@ -1,6 +1,10 @@
-numpy
+﻿fastapi
+uvicorn
+pydantic
 pandas
-matplotlib
-scikit-learn
-jupyter
+numpy
 yfinance
+requests
+pyarrow
+websockets==17.2
+protobuf==7.36.2
